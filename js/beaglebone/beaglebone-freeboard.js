@@ -4,8 +4,8 @@ var beaglebone = (function() {
         var url = address;
         url = url.replace(/^(http:\/\/|https:\/\/)*/, 'http://');
         url = url.replace(/(\/)*$/, '/bonescript.js');
-        var oldHead = head;
-        var oldScript = script;
+        var oldHead = (typeof head == 'undefined') ? null : head;
+        var oldScript = (typeof script == 'undefined') ? null : script;
         head.js(url, addHandlers);
 
         function addHandlers() {
