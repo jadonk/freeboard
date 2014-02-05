@@ -22,10 +22,11 @@
                 "js/freeboard/freeboard.js",
                 "js/freeboard/plugins/freeboard.datasources.js",
                 "js/freeboard/plugins/freeboard.widgets.js",
+                "js/beaglebone/beaglebone-freeboard.js",
                 function(){
                     $(function()
                     { //DOM Ready
-                        freeboard.initialize(true);
+                        freeboard.initialize(true, beaglebone.initialize);
                     });
                 });
     </script>
