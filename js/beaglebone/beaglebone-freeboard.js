@@ -4,19 +4,13 @@ var beaglebone = (function() {
         var url = address;
         url = url.replace(/^(http:\/\/|https:\/\/)*/, 'http://');
         url = url.replace(/(\/)*$/, '/bonescript.js');
-        loadScript(url, addHandlers);
-
-        function loadScript(url, onload) {
-            var head = document.getElementsByTagName('head')[0];
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = url;
-            script.charset = 'UTF-8';
-            var scriptObj = head.appendChild(script);
-            scriptObj.onload = onload;
-        }
+        var oldHead = head;
+        var oldScript = script;
+        head.js(url, addHandlers);
 
         function addHandlers() {
+            head = oldHead;
+            script = oldScript;
             if(typeof _bonescript != 'undefined') {
                 _bonescript.address = address;
                 _bonescript.on.initialized = onBoneScriptInit;
