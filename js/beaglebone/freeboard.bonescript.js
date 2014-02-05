@@ -1,11 +1,12 @@
 var npm = require('npm');
+var semver = require('npm/node_modules/semver');
 var b = require('bonescript');
 var dweetio;
 
 var errorFile = "/var/lib/cloud9/lastFreeboardError.txt";
 var dweetioName = "/var/lib/cloud9/dweetioName.txt";
 
-b.writeTextFile(dweetioName, "Started");
+b.writeTextFile(errorFile, "Started\n");
 
 
 try {
@@ -17,12 +18,12 @@ try {
 try {
     onLoadDweetio();
 } catch(ex) {
-    b.writeTextFile(errorFile, "Error: " + ex);
+    b.writeTextFile(errorFile, "Error: " + ex + "\n");
 }
 
 function onLoadDweetio() {
-    if(b.getPlatform().bonescript != '0.2.4') {
-        b.writeTextFile(errorFile, "Need to update BoneScript to version 0.2.4");
+    if(semver.lt(b.getPlatform().bonescript, '0.2.4')) {
+        b.writeTextFile(errorFile, "Need to update BoneScript to version 0.2.4\n");
         return;
     }
 
@@ -90,7 +91,7 @@ function onLoadDweetio() {
     }
 
     function onDweet(err, dweet) {
-        var errMsg = "onDweet: " + err + "\n" + JSON.stringify(dweet);
+        var errMsg = "onDweet: " + err + "\n" + JSON.stringify(dweet) + "\n";
         if(typeof dweet.thing == "string") {
             b.writeTextFile(dweetioName, dweet.thing);
         }
@@ -101,7 +102,7 @@ function onLoadDweetio() {
 
 function onNPMLoadForDweetio(err) {
     if(err) {
-        var errMsg = "onNPMLoadForDweetio: " + err;
+        var errMsg = "onNPMLoadForDweetio: " + err + "\n";
         b.writeTextFile(errorFile, errMsg);
         return;
     }
@@ -112,13 +113,13 @@ function onDweetioInstall() {
     try {
         dweetio = require('node-dweetio');
     } catch(ex) {
-        b.writeTextFile(errorFile, "Failed to install dweetio module: " + ex);
+        b.writeTextFile(errorFile, "Failed to install dweetio module: " + ex + "\n");
         return;
     }
     try {
         onLoadDweetio();
     } catch(ex) {
-        b.writeTextFile(errorFile, "Error: " + ex);
+        b.writeTextFile(errorFile, "Error: " + ex + "\n");
         return;
     }
 }
