@@ -31,6 +31,7 @@ function onLoadDweetio() {
 
     // Bacon Cape support
     var dweetData = {
+        "Board": "BACON",
         "Slider": 0,
         "Button": 0,
         "Accelerometer": {

@@ -89,6 +89,58 @@ var beaglebone = (function() {
 
     function onDweetioName(dweetioname) {
         console.log("Attempting to connect to BeagleBone through dweet.io at " + dweetioname);
+        dweetio.get_latest_dweet_for(dweetioname, onDweet);
+
+        function onDweet(err, dweet) {
+            if(err) {
+                console.log("Unable to get dweet from device: " + err);
+                return;
+            }
+            if(
+                (Object.prototype.toString.call(dweet) != '[object Array]')
+                || (typeof dweet[0] == 'undefined')
+                || (typeof dweet[0].thing == 'undefined')
+                || (typeof dweet[0].content == 'undefined')
+            ) {
+                console.log('Error in dweet response: ' + JSON.stringify(dweet));
+                return;
+            }
+            console.log('Dweet: ' + JSON.stringify(dweet[0].content));
+            if(typeof dweet[0].content.Board == 'undefined') {
+                console.log("Dweet does not contain the board name\n");
+                return;
+            }
+            doLoadDashboard(dweet[0].content.Board);
+        }
+
+        function doLoadDashboard(board) {
+            if(board != "BACON") {
+                console.log("No dashboard data for " + board);
+                return;
+            } else {
+                console.log("Loading dashboard for " + board);
+            }
+            jQuery.get("js/beaglebone/bacon.dashboard.json", onDashboardReadSuccess, 'json').fail(onDashboardReadFail);
+        }
+
+        function onDashboardReadSuccess(dashboardData) {
+            console.log("Starting dashboard: " + JSON.stringify(dashboardData));
+            try {
+                dashboardData.datasources[0].settings.thing_id = dweetioname;
+            } catch(ex) {
+                console.log("Dweet name not configured as datasource in dashboard");
+                return;
+            }
+            freeboard.loadDashboard(dashboardData, onDashboardLoad);
+        }
+
+        function onDashboardLoad() {
+            console.log("Dashboard running");
+        }
+
+        function onDashboardReadFail(dashboardData) {
+            console.log("Failed to read dashboard data");
+        }
     }
 
     return ({
@@ -98,7 +150,7 @@ var beaglebone = (function() {
             if(dweetioname == "" && address != "") {
                 setTargetAddress(address);
             } else if(dweetioname != "") {
-                onDweetioname(dweetioname);
+                onDweetioName(dweetioname);
             } else {
                 console.log("Need to specify 'address' or 'dweetioname' to connect to BeagleBone");
             }

@@ -1,0 +1,51 @@
+{
+   "allow_edit":true,
+   "plugins":[
+   ],
+   "panes":[
+      {
+         "title":"Bacon Cape",
+         "width":1,
+         "row":1,
+         "col":1,
+         "widgets":[
+            {
+               "type":"pointer",
+               "settings":{
+                  "direction":"(180/Math.PI)*Math.atan2(-datasources[\"BeagleBone Bacon Cape\"].Accelerometer.X,-datasources[\"BeagleBone Bacon Cape\"].Accelerometer.Y)",
+                  "value_text":"datasources[\"BeagleBone Bacon Cape\"].Accelerometer.Z",
+                  "units":"G"
+               }
+            },
+            {
+               "type":"gauge",
+               "settings":{
+                  "title":"",
+                  "value":"(100-datasources[\"BeagleBone Bacon Cape\"].Slider*100).toFixed(0)",
+                  "units":"%",
+                  "min_value":0,
+                  "max_value":"100"
+               }
+            },
+            {
+               "type":"indicator",
+               "settings":{
+                  "title":"",
+                  "value":"1-datasources[\"BeagleBone Bacon Cape\"].Button",
+                  "on_text":"",
+                  "off_text":""
+               }
+            }
+         ]
+      }
+   ],
+   "datasources":[
+      {
+         "name":"BeagleBone Bacon Cape",
+         "type":"dweet_io",
+         "settings":{
+            "thing_id":"unknown"
+         }
+      }
+   ]
+}
